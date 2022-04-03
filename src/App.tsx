@@ -1,39 +1,66 @@
-import { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+import GameBoard from './components/GameBoard';
+
+const ClickableCard = styled.div`
+  border: 1px solid black;
+  border-radius: 5px;
+  text-align: center;
+
+  cursor: pointer;
+
+  :hover {
+    background-color: aliceblue;
+  }
+
+  width: 20%;
+`;
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 500px;
+  height: 500px;
+  background: #96c8a2;
+
+  margin: 0 auto 0 auto;
+  border-radius: 5px;
+`;
+
+const Row = styled.div`
+  margin-top: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
 
 const App = () => {
-  const [count, setCount] = useState(0);
+  const shellCount = 3;
+  const [ballIndex, setBallIndex] = useState(0);
+  const [playCount, setPlaycount] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    // assign a random number between 0 and shellCount
+    const randomIdx = Math.floor(Math.random() * shellCount);
+    setBallIndex(randomIdx);
+  }, [playCount]);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((c) => c + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <AppContainer>
+      <GameBoard shellCount={3} ballIndex={ballIndex} playing={playing} />
+      <Row>
+        <ClickableCard
+          onClick={() => {
+            setPlaying(!playing);
+            setPlaycount(playCount + 1);
+          }}
+        >
+          {playCount === 0 ? 'Start' : 'Play Again'}
+        </ClickableCard>
+      </Row>
+    </AppContainer>
   );
 };
 

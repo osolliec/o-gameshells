@@ -1,6 +1,6 @@
 # Olivier's Game of Shells
 
-Hello and welcome to my Game of Shells implementation !
+Hello and welcome to my [Game of Shells](https://en.wikipedia.org/wiki/Shell_game) implementation !
 
 # Prerequisites
 
@@ -8,7 +8,7 @@ Hello and welcome to my Game of Shells implementation !
 
 # Chosen technologies
 
-- [React !](https://reactjs.org/)
+- [React !](https://reactjs.org/). Used version 18 because I wanted to try it.
 - [Styled components](https://styled-components.com/) (I love CSS in JS), I could have picked [emotion](https://emotion.sh/docs/introduction) too.
 - [Vite](https://vitejs.dev/), a new build tool for web projects.
 - [ESlint](https://eslint.org/), to detect and fix linting issues.
@@ -33,12 +33,18 @@ As you can see CSS is not my strong suit ! I see two possibilities to improve th
 
 - Use SVG that I find on the internet / ask a designer to draw the shells, in a company I would definitely ask for a designer's shell :-).
 - Spend some time to use a design system for the rest of the app. Something like [Mantine](https://mantine.dev/) has caught my eye recently.
+- Make it responsive, probably ! I only tested this on a Desktop computer :-).
 
 ## More tests.
 
 I would add more tests. Some E2E tests with [Cypress](https://www.cypress.io/) could be added, too.
 
+## Github pages.
+
+I would host a compiled version of the app, for easy testing online in a github page.
+
 # Disclaimer
 
 - I developed the app on Windows (on my personal computer). Apologies in advance if you encounter CRLF issues while checking out the app.
 - I only tested the app on Chrome. I think it should be fine on Edge and Firefox though, I don't know about Safari!
+- I am new at Keyframes and CSS animation in general but I thought it could apply here, so I am happy to have used it.
