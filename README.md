@@ -1,6 +1,6 @@
 # Olivier's Game of Shells
 
-Hello and welcome to my Game of Shells !
+Hello and welcome to my Game of Shells implementation !
 
 # Prerequisites
 
@@ -11,8 +11,8 @@ Hello and welcome to my Game of Shells !
 - [React !](https://reactjs.org/)
 - [Styled components](https://styled-components.com/) (I love CSS in JS), I could have picked [emotion](https://emotion.sh/docs/introduction) too.
 - [Vite](https://vitejs.dev/), a new build tool for web projects.
-- [ESlint](), to detect and fix linting issues.
-- [Prettier](), to automatically format on save my files.
+- [ESlint](https://eslint.org/), to detect and fix linting issues.
+- [Prettier](https://prettier.io/), to automatically format on save my files.
 
 # Get started
 
