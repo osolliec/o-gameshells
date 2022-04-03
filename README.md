@@ -10,8 +10,9 @@ Hello and welcome to my Game of Shells !
 
 - [React !](https://reactjs.org/)
 - [Styled components](https://styled-components.com/) (I love CSS in JS), I could have picked [emotion](https://emotion.sh/docs/introduction) too.
-- [Vite](https://vitejs.dev/), a new build tool for web projects
-
+- [Vite](https://vitejs.dev/), a new build tool for web projects.
+- [ESlint](), to detect and fix linting issues.
+- [Prettier](), to automatically format on save my files.
 
 # Get started
 
@@ -19,18 +20,23 @@ Hello and welcome to my Game of Shells !
 - `npm run dev` to start a local instance of the app.
 - Navigate to `localhost:3000` with the browser of your choice (tested with Chrome only :D) !
 
+# More options
+
+- `npm run lint` to check for linting issues.
+- `npm run lint-fix` to fix automatically 'fixable' linting issues.
+
 # Areas of improvements - If I had more time
 
 ## Look and feel improvements.
 
 As you can see CSS is not my strong suit ! I see two possibilities to improve the look and feel of the app:
+
 - Use SVG that I find on the internet / ask a designer to draw the shells, in a company I would definitely ask for a designer's shell :-).
 - Spend some time to use a design system for the rest of the app. Something like [Mantine](https://mantine.dev/) has caught my eye recently.
 
 ## More tests.
 
 I would add more tests. Some E2E tests with [Cypress](https://www.cypress.io/) could be added, too.
-
 
 # Disclaimer
 
