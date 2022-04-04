@@ -2,19 +2,33 @@ import styled, { css, keyframes } from 'styled-components';
 
 type ShellProps = {
   containsBall?: boolean;
-  slideDown?: boolean;
+  startAnimation: boolean;
+  inverseShuffle: boolean;
+  clickable?: boolean;
+  onClick: () => void;
 };
 
 /**
  * A shell is an upside down 'plastic cup'-like object, that can contain a ball.
  * @returns
  */
-const Shell = ({ containsBall, slideDown }: ShellProps) => {
+const Shell = ({ containsBall, startAnimation, clickable, inverseShuffle, onClick }: ShellProps) => {
+  console.log(inverseShuffle);
   return (
     <CupWithBall>
-      <CupContainer slideDown={slideDown}>
-        <UpsideDownCup />
-      </CupContainer>
+      <SlideDownContainer animate={startAnimation}>
+        <ShuffleContainer animate={startAnimation} inverseShuffle={inverseShuffle}>
+          <CupContainer>
+            <UpsideDownCup
+              clickable={clickable}
+              onClick={() => {
+                clickable && onClick();
+              }}
+            />
+          </CupContainer>
+        </ShuffleContainer>
+      </SlideDownContainer>
+
       {containsBall && <Ball />}
     </CupWithBall>
   );
@@ -28,17 +42,18 @@ const CupWithBall = styled.div`
  * A ball to hide under the cups.
  */
 const Ball = styled.div`
+  position: absolute;
+
   width: 50px;
   height: 50px;
   border-radius: 50%;
   // Beautiful gradient shamelessly stolen from https://codepen.io/vikas78/pen/vYEymWd
   background: radial-gradient(circle at 65% 15%, white 1px, aqua 3%, darkblue 60%, aqua 100%);
 
-  position: absolute;
   top: 180px;
   left: 50px;
 
-  z-index: 0;
+  z-index: 1;
 `;
 
 const slideDownAnimation = css`
@@ -46,45 +61,89 @@ const slideDownAnimation = css`
   from {
     transform: translateY(0%);
   }
-
   to {
-    transform: translateY(50%);
+    transform: translateY(55%);
   }
 `};
   animation-duration: 1s;
   animation-iteration-count: 1;
-  animation-fill-mode: forwards; // this ensures that the animation stays down
-  z-index: 1;
+  animation-fill-mode: forwards; // this ensures that the animation stays down (at the last animation state)
 `;
+
+const SlideDownContainer = styled.div<{ animate?: boolean }>`
+  position: relative;
+  ${(props) => props.animate && slideDownAnimation}
+
+  z-index: 2;
+`;
+
+// const shuffleAnimation = (inverseShuffle: boolean) => {
+//   const random = Math.floor(Math.random() * 250);
+//   console.log(random);
+//   const percentage = 80 + random;
+//   const percentString = percentage + '%';
+//   const minusString = '-' + percentString;
+//   return css`
+//     animation-name: ${keyframes`
+//   0% {
+//     transform: translateX(0%);
+//   }
+//   25% {
+//     transform: translateX(${inverseShuffle ? minusString : percentString});
+//   }
+//   75% {
+//     transform: translateX(0%);
+//   }
+//   90% {
+//     transform: translateX(${inverseShuffle ? percentString : minusString});
+//   }
+
+//   100% {
+//     transform: translateX(0%);
+//   }
+// `};
+//     animation-delay: 1s;
+//     animation-duration: 2s;
+//     animation-iteration-count: 2;
+//     animation-fill-mode: forwards; // this ensures that the animation stays down (at the last animation state)
+//   `;
+// };
+
+const ShuffleContainer = styled.div<{ animate?: boolean; inverseShuffle: boolean }>``;
 
 /**
  * This container is the box that contains the trapezoid (and possibly the ball).
  * It's easier to reason about because it's just a rectangle.
  * It also contains the css animation to slide down.
  */
-const CupContainer = styled.div<{ slideDown?: boolean }>`
-  width: 140px;
-  height: 150px;
-  border: 1px solid black;
+const CupContainer = styled.div`
   position: relative;
 
-  ${(props) => props.slideDown && slideDownAnimation}
+  width: 140px;
+  height: 150px;
+  //border: 1px solid black;
+  position: relative;
 `;
 
 /**
  * An isosceles trapezoid to represent a Shell.
  * Idea shamelessly stolen from https://stackoverflow.com/questions/7920754/how-to-draw-a-trapezium-trapezoid-with-css3
  */
-const UpsideDownCup = styled.div`
+const UpsideDownCup = styled.div<{ clickable?: boolean }>`
   width: 100px;
   height: 140px;
   background: red;
+  :hover {
+    background: orange;
+  }
   // added a very specific translateY to align the shell top with parent's top.
   // I think this belongs here and not in the parent component because the parent has no knowledge of the unalignment issue caused by the prespective + rotateX transformations
   transform: translateY(-13px) perspective(10px) rotateX(2deg);
 
   // Normally I don't put margins in the components themselves, but I think here it makes sense because of the transform above.
   margin: 0 20px 0 20px;
+
+  cursor: ${(props) => (props.clickable ? 'pointer' : 'initial') + ';'};
 `;
 
 export default Shell;

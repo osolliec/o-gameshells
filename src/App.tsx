@@ -14,8 +14,8 @@ const ClickableCard = styled.div`
     background-color: aliceblue;
   }
 
-  width: 20%;
   margin-left: 15px;
+  padding: 5px 10px;
 `;
 
 const AppContainer = styled.div`
@@ -38,9 +38,31 @@ const Row = styled.div`
   justify-content: center;
 `;
 
-type GameState = 'chose-difficulty' | 'view-ball' | 'playing';
+const TopRow = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  font-size: larger;
+  font-weight: 800;
+
+  margin: 50px auto 50px auto;
+
+  padding: 5px 10px;
+  justify-content: center;
+
+  background-color: aquamarine;
+  border-radius: 5px;
+`;
+
+const BoardContainer = styled.div`
+  height: 180px;
+`;
+
+type GameState = 'chose-difficulty' | 'view-ball' | 'playing' | 'success' | 'failure';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
+
+const difficulties = ['easy', 'medium', 'hard'] as Array<Difficulty>;
 
 const difficultyText = new Map<Difficulty, string>([
   ['easy', 'Two shells.'],
@@ -48,7 +70,13 @@ const difficultyText = new Map<Difficulty, string>([
   ['hard', 'Five shells !'],
 ]);
 
-const difficulties = ['easy', 'medium', 'hard'] as Array<Difficulty>;
+const topRowText = new Map<GameState, string>([
+  ['chose-difficulty', 'Pick a difficulty.'],
+  ['view-ball', 'Click GO once you are ready ! No going back !!'],
+  ['playing', 'Click on the shell you think contains the pearl.'],
+  ['success', 'Congratulations ! YOU WON !'],
+  ['failure', 'Sorry, you lost. Better luck next time !'],
+]);
 
 const App = () => {
   const [shellCount, setShellCount] = useState(0);
@@ -57,8 +85,8 @@ const App = () => {
   console.log(gameState);
 
   useEffect(() => {
-    // assign a random number between 0 and shellCount
     if (gameState === 'view-ball') {
+      // assign a random number between 0 and shellCount
       const randomIdx = Math.floor(Math.random() * shellCount);
       setBallIndex(randomIdx);
     }
@@ -81,11 +109,28 @@ const App = () => {
     setGameState('view-ball');
   };
 
+  const checkSuccess = (index: number) => {
+    if (index === ballIndex) {
+      setGameState('success');
+      return;
+    }
+    setGameState('failure');
+  };
+
   return (
     <AppContainer>
-      {(gameState === 'playing' || gameState === 'view-ball') && (
-        <GameBoard shellCount={shellCount} ballIndex={ballIndex} playing={gameState === 'playing'} />
-      )}
+      <TopRow>{topRowText.get(gameState)}</TopRow>
+      <BoardContainer>
+        {(gameState === 'playing' || gameState === 'view-ball') && (
+          <GameBoard
+            shellCount={shellCount}
+            ballIndex={ballIndex}
+            playing={gameState === 'playing'}
+            onShellClicked={checkSuccess}
+          />
+        )}
+      </BoardContainer>
+
       {gameState === 'chose-difficulty' && (
         <Row>
           {difficulties.map((difficulty) => {
@@ -96,8 +141,7 @@ const App = () => {
                   setDifficulty(difficulty);
                 }}
               >
-                <p>{difficulty}</p>
-                <p>{difficultyText.get(difficulty)}</p>
+                {difficultyText.get(difficulty)}
               </ClickableCard>
             );
           })}
@@ -108,24 +152,24 @@ const App = () => {
           <ClickableCard
             onClick={() => {
               setGameState('playing');
-              //setPlaying(true);
             }}
           >
             GO
           </ClickableCard>
         </Row>
       )}
-      {gameState === 'playing' && (
-        <Row>
-          {/* <ClickableCard
-            onClick={() => {
-              setGameState('start');
-            }}
-          >
-            Restart !
-          </ClickableCard> */}
-        </Row>
-      )}
+      {gameState === 'success' ||
+        (gameState === 'failure' && (
+          <Row>
+            <ClickableCard
+              onClick={() => {
+                setGameState('view-ball');
+              }}
+            >
+              Play again !
+            </ClickableCard>
+          </Row>
+        ))}
     </AppContainer>
   );
 };

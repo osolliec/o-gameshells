@@ -13,22 +13,27 @@ type GameBoardProps = {
   shellCount: number;
   ballIndex: number;
   playing: boolean;
+  onShellClicked: (shellIndex: number) => void;
 };
 
 /**
  * Gameboard
  */
-const GameBoard = ({ shellCount, ballIndex, playing }: GameBoardProps) => {
+const GameBoard = ({ shellCount, ballIndex, playing, onShellClicked }: GameBoardProps) => {
   console.log(ballIndex);
   return (
     <Container>
       {Array.from(Array(shellCount).keys()).map((k) => {
-        //console.log('abc ' + k);
-        //console.log(k);
-        if (k === ballIndex) {
-          console.log('ballIndex' + k);
-        }
-        return <Shell key={k} containsBall={k === ballIndex} slideDown={playing}></Shell>;
+        return (
+          <Shell
+            key={k}
+            containsBall={k === ballIndex}
+            startAnimation={playing}
+            clickable={playing}
+            inverseShuffle={k % 2 === 1}
+            onClick={() => onShellClicked(k)}
+          ></Shell>
+        );
       })}
     </Container>
   );
