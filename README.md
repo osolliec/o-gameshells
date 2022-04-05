@@ -28,6 +28,7 @@ Hello and welcome to my [Game of Shells](https://en.wikipedia.org/wiki/Shell_gam
 
 - `npm run lint` to check for linting issues.
 - `npm run lint-fix` to fix automatically 'fixable' linting issues.
+- `npm run test` to execute the test.
 
 # Areas of improvements - If I had more time
 
