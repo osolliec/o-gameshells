@@ -3,17 +3,6 @@ import styled from 'styled-components';
 import { shuffleArray } from '../utils';
 import Shell from './Shell';
 
-type GameBoardProps = {
-  shellCount: number;
-  ballIndex: number;
-  // true to start the shuffling animations. false to reset to the original state.
-  shuffling: boolean;
-  awaitingInput: boolean;
-  gameOver: boolean;
-  onShellClicked: (idx: number) => void;
-  onShufflingDone: () => void;
-};
-
 const timers = {
   switchAnimationTotalTime: 600,
   // switchAnimationStepTime time must be a divider of switchAnimationTotalTime !
@@ -29,24 +18,15 @@ const pixels = {
 
 const totalShuffleCount = 4;
 
-const slowlySwitchPosition = (element: HTMLDivElement, fromX: number, toX: number) => {
-  let totalTime = timers.switchAnimationTotalTime;
-
-  const interval = setInterval(() => {
-    // a number between [1,0], decreasing over interval iterations
-    let percentageFromSource = totalTime / timers.switchAnimationTotalTime;
-    totalTime -= timers.switchAnimationStepTime;
-    if (totalTime === 0) {
-      clearInterval(interval);
-      // force set the element completely at destination
-      percentageFromSource = 0;
-    }
-
-    // at percentageFromSource = 1, left is at margin + fromX
-    // at percentageFromSource = 0, left is at margin + toX
-    /* eslint-disable no-param-reassign */
-    element.style.left = `${pixels.leftMargin + toX + percentageFromSource * (fromX - toX)}px`;
-  }, timers.switchAnimationStepTime);
+type GameBoardProps = {
+  shellCount: number;
+  ballIndex: number;
+  // true to start the shuffling animations. false to reset to the original state.
+  shuffling: boolean;
+  awaitingInput: boolean;
+  gameOver: boolean;
+  onShellClicked: (idx: number) => void;
+  onShufflingDone: () => void;
 };
 
 /**
@@ -111,7 +91,7 @@ const GameBoard = ({
         >
           <Shell
             containsBall={k === ballIndex}
-            startAnimation={shuffling}
+            startSlideDownAnimation={shuffling}
             clickable={awaitingInput}
             clicked={gameOver}
             onClick={() => onShellClicked(k)}
@@ -120,6 +100,32 @@ const GameBoard = ({
       ))}
     </Container>
   );
+};
+
+/**
+ * Gradually moves the element to target position, in small intervals.
+ * @param element The element to move
+ * @param fromX The X position where the element is
+ * @param toX  The X position where the element should move to
+ */
+const slowlySwitchPosition = (element: HTMLDivElement, fromX: number, toX: number) => {
+  let totalTime = timers.switchAnimationTotalTime;
+
+  const interval = setInterval(() => {
+    // a number between [1,0], decreasing over interval iterations
+    let percentageFromSource = totalTime / timers.switchAnimationTotalTime;
+    totalTime -= timers.switchAnimationStepTime;
+    if (totalTime === 0) {
+      clearInterval(interval);
+      // force set the element completely at destination
+      percentageFromSource = 0;
+    }
+
+    // at percentageFromSource = 1, left is at margin + fromX
+    // at percentageFromSource = 0, left is at margin + toX
+    /* eslint-disable no-param-reassign */
+    element.style.left = `${pixels.leftMargin + toX + percentageFromSource * (fromX - toX)}px`;
+  }, timers.switchAnimationStepTime);
 };
 
 const Container = styled.div`
