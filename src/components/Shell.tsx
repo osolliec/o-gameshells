@@ -26,7 +26,7 @@ const Shell = ({ containsBall, startSlideDownAnimation, clickable, clicked, onCl
         }}
       />
     </CupContainer>
-    {containsBall && <Ball />}
+    {containsBall && <Ball aria-label="ball" />}
   </CupWithBall>
 );
 

@@ -1,7 +1,8 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "jest/globals": true
   },
   "extends": [
     "eslint:recommended",
@@ -23,7 +24,8 @@
     "react",
     "@typescript-eslint",
     "react-hooks",
-    "prefer-arrow"
+    "prefer-arrow",
+    "jest"
   ],
   "ignorePatterns": [
     "*.svg"
@@ -142,6 +144,7 @@
   },
   "globals": {
     "JSX": "readonly",
-    "React": "readonly"
+    "React": "readonly",
+    "jest": true
   }
 }
