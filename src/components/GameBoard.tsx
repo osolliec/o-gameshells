@@ -7,13 +7,13 @@ type GameBoardProps = {
   shellCount: number;
   ballIndex: number;
   playing: boolean;
-  onShellClicked: (shellIndex: number) => void;
+  onShellClicked: (idx: number) => void;
 };
 
 const timers = {
   switchAnimationTotalTime: 600,
   // switchAnimationStepTime time must be a divider of switchAnimationTotalTime !
-  switchAnimationStepTime: 25,
+  switchAnimationStepTime: 20,
   switchAnimationStartDelay: 1100,
   switchAnimationStepDelay: 700,
 };
@@ -31,7 +31,7 @@ const slowlySwitchPosition = (element: HTMLDivElement, fromX: number, toX: numbe
   const interval = setInterval(() => {
     // a number between [1,0], decreasing over interval iterations
     let percentageFromSource = totalTime / timers.switchAnimationTotalTime;
-    totalTime = totalTime - timers.switchAnimationStepTime;
+    totalTime -= timers.switchAnimationStepTime;
     if (totalTime === 0) {
       clearInterval(interval);
       // force set the element completely at destination
@@ -40,7 +40,8 @@ const slowlySwitchPosition = (element: HTMLDivElement, fromX: number, toX: numbe
 
     // at percentageFromSource = 1, left is at margin + fromX
     // at percentageFromSource = 0, left is at margin + toX
-    element.style.left = pixels.leftMargin + toX + percentageFromSource * (fromX - toX) + 'px';
+    /* eslint-disable no-param-reassign */
+    element.style.left = `${pixels.leftMargin + toX + percentageFromSource * (fromX - toX)}px`;
   }, timers.switchAnimationStepTime);
 };
 
@@ -80,31 +81,30 @@ const GameBoard = ({ shellCount, ballIndex, playing, onShellClicked }: GameBoard
     setTimeout(() => {
       recursiveShuffleTimeout();
     }, timers.switchAnimationStartDelay);
-  }, [playing]);
+  }, [playing, shellCount]);
 
   return (
     <Container>
-      {[...Array(shellCount).keys()].map((k) => {
-        return (
-          <div
-            style={{ left: pixels.leftMargin + k * pixels.xSpacing + 'px', top: 0, position: 'absolute' }}
-            key={k}
-            ref={(ref) => {
-              if (ref) {
-                shells.current[k] = ref;
-              }
-            }}
-          >
-            <Shell
-              containsBall={k === ballIndex}
-              startAnimation={playing}
-              clickable={playing}
-              clicked={true}
-              onClick={() => onShellClicked(k)}
-            />
-          </div>
-        );
-      })}
+      {[...Array(shellCount).keys()].map((k) => (
+        // surround the shell with a div to attach ref + set absolute style
+        <div
+          style={{ left: `${pixels.leftMargin + k * pixels.xSpacing}px`, top: 0, position: 'absolute' }}
+          key={k}
+          ref={(ref) => {
+            if (ref) {
+              shells.current[k] = ref;
+            }
+          }}
+        >
+          <Shell
+            containsBall={k === ballIndex}
+            startAnimation={playing}
+            clickable={playing}
+            clicked
+            onClick={() => onShellClicked(k)}
+          />
+        </div>
+      ))}
     </Container>
   );
 };

@@ -3,61 +3,6 @@ import styled from 'styled-components';
 
 import GameBoard from './components/GameBoard';
 
-const ClickableCard = styled.div`
-  border: 1px solid black;
-  border-radius: 5px;
-  text-align: center;
-
-  cursor: pointer;
-
-  :hover {
-    background-color: aliceblue;
-  }
-
-  margin-left: 15px;
-  padding: 5px 10px;
-`;
-
-const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  //width: 500px;
-  margin: 0 5% 0 5%;
-  height: 500px;
-  background: #96c8a2;
-
-  //margin: 0 auto 0 auto;
-  border-radius: 5px;
-`;
-
-const Row = styled.div`
-  margin-top: 100px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
-
-const TopRow = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  font-size: larger;
-  font-weight: 800;
-
-  margin: 50px auto 50px auto;
-
-  padding: 5px 10px;
-  justify-content: center;
-
-  background-color: aquamarine;
-  border-radius: 5px;
-`;
-
-const BoardContainer = styled.div`
-  height: 180px;
-`;
-
 type GameState = 'chose-difficulty' | 'view-ball' | 'playing' | 'success' | 'failure';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -78,6 +23,13 @@ const topRowText = new Map<GameState, string>([
   ['failure', 'Sorry, you lost. Better luck next time !'],
 ]);
 
+/**
+ * App is the application entry point where the game is controlled:
+ * - Pilot game state changes
+ * - Show the different difficulty choices
+ * - Show the top row text to help the user
+ * @returns
+ */
 const App = () => {
   const [shellCount, setShellCount] = useState(0);
   const [ballIndex, setBallIndex] = useState(0);
@@ -85,11 +37,10 @@ const App = () => {
 
   useEffect(() => {
     if (gameState === 'view-ball') {
-      // assign a random number between 0 and shellCount
-      const randomIdx = Math.floor(Math.random() * shellCount);
-      setBallIndex(randomIdx);
+      // assign a random number between 0 and shellCount - 1
+      setBallIndex(Math.floor(Math.random() * shellCount));
     }
-  }, [gameState]);
+  }, [gameState, shellCount]);
 
   const setDifficulty = (difficulty: Difficulty) => {
     switch (difficulty) {
@@ -100,8 +51,8 @@ const App = () => {
         setShellCount(5);
         break;
       case 'medium':
-        setShellCount(3);
       default:
+        setShellCount(3);
         break;
     }
 
@@ -132,18 +83,16 @@ const App = () => {
 
       {gameState === 'chose-difficulty' && (
         <Row>
-          {difficulties.map((difficulty) => {
-            return (
-              <ClickableCard
-                key={difficulty}
-                onClick={() => {
-                  setDifficulty(difficulty);
-                }}
-              >
-                {difficultyText.get(difficulty)}
-              </ClickableCard>
-            );
-          })}
+          {difficulties.map((difficulty) => (
+            <ClickableCard
+              key={difficulty}
+              onClick={() => {
+                setDifficulty(difficulty);
+              }}
+            >
+              {difficultyText.get(difficulty)}
+            </ClickableCard>
+          ))}
         </Row>
       )}
       {gameState === 'view-ball' && (
@@ -172,5 +121,52 @@ const App = () => {
     </AppContainer>
   );
 };
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  margin: 0 5% 0 5%;
+  height: 500px;
+  background: #96c8a2;
+
+  border-radius: 5px;
+`;
+
+const TopRow = styled.div`
+  font-size: larger;
+  font-weight: 800;
+
+  margin: 50px auto 50px auto;
+
+  padding: 5px 10px;
+
+  background-color: aquamarine;
+  border-radius: 5px;
+`;
+
+const Row = styled.div`
+  margin-top: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
+const BoardContainer = styled.div`
+  height: 180px;
+`;
+
+const ClickableCard = styled.div`
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+
+  :hover {
+    background-color: aliceblue;
+  }
+
+  margin: 0 10px;
+  padding: 5px 10px;
+`;
 
 export default App;

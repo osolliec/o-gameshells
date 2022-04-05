@@ -27,21 +27,19 @@ Hello and welcome to my [Game of Shells](https://en.wikipedia.org/wiki/Shell_gam
 
 # Areas of improvements - If I had more time
 
-## Look and feel improvements.
+## Improvements.
 
-As you can see CSS is not my strong suit ! I see two possibilities to improve the look and feel of the app:
+### Look and feel improvements
 
 - Use SVG that I find on the internet / ask a designer to draw the shells, in a company I would definitely ask for a designer's shell :-).
-- Spend some time to use a design system for the rest of the app. Something like [Mantine](https://mantine.dev/) has caught my eye recently.
+- Spend some time to use a design system for the rest of the app. Something like [Mantine](https://mantine.dev/), which has caught my eye recently.
 - Make it responsive, probably ! I only tested this on a Desktop computer :-).
 
-## More tests.
+### Other improvements
 
-I would add more tests. Some E2E tests with [Cypress](https://www.cypress.io/) could be added, too.
-
-## Github pages.
-
-I would host a compiled version of the app, for easy testing online in a github page.
+- The difficulty could also change the animation time.
+- I would add more tests. Some E2E tests with [Cypress](https://www.cypress.io/) could be added, too.
+- I would host a compiled version of the app, for easy testing online in a github page.
 
 # Disclaimer
 
