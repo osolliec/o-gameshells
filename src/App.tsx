@@ -82,7 +82,6 @@ const App = () => {
   const [shellCount, setShellCount] = useState(0);
   const [ballIndex, setBallIndex] = useState(0);
   const [gameState, setGameState] = useState('chose-difficulty' as GameState);
-  console.log(gameState);
 
   useEffect(() => {
     if (gameState === 'view-ball') {

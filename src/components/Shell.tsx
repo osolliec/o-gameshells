@@ -3,8 +3,8 @@ import styled, { css, keyframes } from 'styled-components';
 type ShellProps = {
   containsBall?: boolean;
   startAnimation: boolean;
-  inverseShuffle: boolean;
-  clickable?: boolean;
+  clickable: boolean;
+  clicked: boolean;
   onClick: () => void;
 };
 
@@ -12,23 +12,18 @@ type ShellProps = {
  * A shell is an upside down 'plastic cup'-like object, that can contain a ball.
  * @returns
  */
-const Shell = ({ containsBall, startAnimation, clickable, inverseShuffle, onClick }: ShellProps) => {
-  console.log(inverseShuffle);
+const Shell = ({ containsBall, startAnimation, clickable, clicked, onClick }: ShellProps) => {
   return (
     <CupWithBall>
-      <SlideDownContainer animate={startAnimation}>
-        <ShuffleContainer animate={startAnimation} inverseShuffle={inverseShuffle}>
-          <CupContainer>
-            <UpsideDownCup
-              clickable={clickable}
-              onClick={() => {
-                clickable && onClick();
-              }}
-            />
-          </CupContainer>
-        </ShuffleContainer>
-      </SlideDownContainer>
-
+      <CupContainer animate={startAnimation}>
+        <UpsideDownCup
+          clickable={clickable}
+          clicked={clicked}
+          onClick={() => {
+            clickable && onClick();
+          }}
+        />
+      </CupContainer>
       {containsBall && <Ball />}
     </CupWithBall>
   );
@@ -70,72 +65,51 @@ const slideDownAnimation = css`
   animation-fill-mode: forwards; // this ensures that the animation stays down (at the last animation state)
 `;
 
-const SlideDownContainer = styled.div<{ animate?: boolean }>`
-  position: relative;
-  ${(props) => props.animate && slideDownAnimation}
-
-  z-index: 2;
-`;
-
-// const shuffleAnimation = (inverseShuffle: boolean) => {
-//   const random = Math.floor(Math.random() * 250);
-//   console.log(random);
-//   const percentage = 80 + random;
-//   const percentString = percentage + '%';
-//   const minusString = '-' + percentString;
-//   return css`
-//     animation-name: ${keyframes`
-//   0% {
-//     transform: translateX(0%);
-//   }
-//   25% {
-//     transform: translateX(${inverseShuffle ? minusString : percentString});
-//   }
-//   75% {
-//     transform: translateX(0%);
-//   }
-//   90% {
-//     transform: translateX(${inverseShuffle ? percentString : minusString});
-//   }
-
-//   100% {
-//     transform: translateX(0%);
-//   }
-// `};
-//     animation-delay: 1s;
-//     animation-duration: 2s;
-//     animation-iteration-count: 2;
-//     animation-fill-mode: forwards; // this ensures that the animation stays down (at the last animation state)
-//   `;
-// };
-
-const ShuffleContainer = styled.div<{ animate?: boolean; inverseShuffle: boolean }>``;
-
 /**
  * This container is the box that contains the trapezoid (and possibly the ball).
  * It's easier to reason about because it's just a rectangle.
  * It also contains the css animation to slide down.
  */
-const CupContainer = styled.div`
+const CupContainer = styled.div<{ animate?: boolean }>`
   position: relative;
 
   width: 140px;
   height: 150px;
   //border: 1px solid black;
   position: relative;
+
+  ${(props) => props.animate && slideDownAnimation}
+
+  z-index: 2;
 `;
 
 /**
  * An isosceles trapezoid to represent a Shell.
  * Idea shamelessly stolen from https://stackoverflow.com/questions/7920754/how-to-draw-a-trapezium-trapezoid-with-css3
  */
-const UpsideDownCup = styled.div<{ clickable?: boolean }>`
+const UpsideDownCup = styled.div<{ clickable: boolean; clicked: boolean }>`
   width: 100px;
   height: 140px;
   background: red;
-  :hover {
-    background: orange;
-  }
+
+  ${(props) =>
+    props.clickable &&
+    css`
+      &:hover {
+        background: orange;
+      }
+    `}
+
+  ${(props) =>
+    props.clicked &&
+    css`
+      &:hover {
+        position: fixed;
+        transform: translateY(-55%) perspective(10px) rotateX(2deg);
+        transition: 0.3s ease-out;
+      }
+    `}
+
   // added a very specific translateY to align the shell top with parent's top.
   // I think this belongs here and not in the parent component because the parent has no knowledge of the unalignment issue caused by the prespective + rotateX transformations
   transform: translateY(-13px) perspective(10px) rotateX(2deg);
