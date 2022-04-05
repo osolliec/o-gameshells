@@ -2,7 +2,7 @@ import styled, { css, keyframes } from 'styled-components';
 
 type ShellProps = {
   containsBall?: boolean;
-  startAnimation: boolean;
+  startSlideDownAnimation: boolean;
   clickable: boolean;
   clicked: boolean;
   onClick: () => void;
@@ -12,9 +12,9 @@ type ShellProps = {
  * A shell is an upside down 'plastic cup'-like object, that can contain a ball.
  * @returns
  */
-const Shell = ({ containsBall, startAnimation, clickable, clicked, onClick }: ShellProps) => (
+const Shell = ({ containsBall, startSlideDownAnimation, clickable, clicked, onClick }: ShellProps) => (
   <CupWithBall>
-    <CupContainer animate={startAnimation}>
+    <CupContainer animate={startSlideDownAnimation}>
       <UpsideDownCup
         clickable={clickable}
         clicked={clicked}
@@ -58,11 +58,8 @@ const slideDownAnimation = css`
  */
 const CupContainer = styled.div<{ animate?: boolean }>`
   position: relative;
-
   width: 140px;
   height: 150px;
-  //border: 1px solid black;
-  position: relative;
 
   ${(props) => props.animate && slideDownAnimation}
 
@@ -90,34 +87,33 @@ const UpsideDownCup = styled.div<{ clickable: boolean; clicked: boolean }>`
     props.clicked &&
     css`
       &:hover {
-        position: fixed;
+        background: orange;
         transform: translateY(-55%) perspective(10px) rotateX(2deg);
         transition: 0.3s ease-out;
       }
     `}
 
- // added a very specific translateY to align the shell top with parent's top.
- // I think this belongs here and not in the parent component because the parent has no knowledge of the unalignment issue caused by the prespective + rotateX transformations
- transform: translateY(-13px) perspective(10px) rotateX(2deg);
+  // added a very specific translateY to align the shell top with parent's top.
+  // I think this belongs here and not in the parent component because the parent has no knowledge of the unalignment issue caused by the prespective + rotateX transformations
+  transform: translateY(-13px) perspective(10px) rotateX(2deg);
 
   // Normally I don't put margins in the components themselves, but I think here it makes sense because of the transform above.
   margin: 0 20px 0 20px;
-
-  cursor: ${(props) => `${props.clickable ? 'pointer' : 'initial'};`};
+  cursor: ${(props) => `${props.clickable || props.clicked ? 'pointer' : 'initial'};`};
 `;
 
 /**
  * A ball to hide under the cups.
  */
 const Ball = styled.div`
-  position: absolute;
-
   width: 50px;
   height: 50px;
+
   border-radius: 50%;
   // Beautiful gradient shamelessly stolen from https://codepen.io/vikas78/pen/vYEymWd
   background: radial-gradient(circle at 65% 15%, white 1px, aqua 3%, darkblue 60%, aqua 100%);
 
+  position: absolute;
   top: 180px;
   left: 50px;
 

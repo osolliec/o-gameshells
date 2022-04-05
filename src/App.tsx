@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import GameBoard from './components/GameBoard';
 
-type GameState = 'chose-difficulty' | 'view-ball' | 'playing' | 'success' | 'failure';
+type GameState = 'chose-difficulty' | 'view-ball' | 'shuffling' | 'awaiting-input' | 'success' | 'failure';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -18,7 +18,8 @@ const difficultyText = new Map<Difficulty, string>([
 const topRowText = new Map<GameState, string>([
   ['chose-difficulty', 'Pick a difficulty.'],
   ['view-ball', 'Click GO once you are ready ! No going back !!'],
-  ['playing', 'Click on the shell you think contains the pearl.'],
+  ['shuffling', 'Please wait while I shuffle the shells.'],
+  ['awaiting-input', 'Click on the shell you think contains the ball.'],
   ['success', 'Congratulations ! YOU WON !'],
   ['failure', 'Sorry, you lost. Better luck next time !'],
 ]);
@@ -71,12 +72,17 @@ const App = () => {
     <AppContainer>
       <TopRow>{topRowText.get(gameState)}</TopRow>
       <BoardContainer>
-        {(gameState === 'playing' || gameState === 'view-ball') && (
+        {['view-ball', 'shuffling', 'awaiting-input', 'success', 'failure'].includes(gameState) && (
           <GameBoard
             shellCount={shellCount}
             ballIndex={ballIndex}
-            playing={gameState === 'playing'}
+            shuffling={gameState !== 'view-ball'}
+            awaitingInput={gameState === 'awaiting-input'}
+            gameOver={gameState === 'success' || gameState === 'failure'}
             onShellClicked={checkSuccess}
+            onShufflingDone={() => {
+              setGameState('awaiting-input');
+            }}
           />
         )}
       </BoardContainer>
@@ -99,25 +105,24 @@ const App = () => {
         <Row>
           <ClickableCard
             onClick={() => {
-              setGameState('playing');
+              setGameState('shuffling');
             }}
           >
             GO
           </ClickableCard>
         </Row>
       )}
-      {gameState === 'success' ||
-        (gameState === 'failure' && (
-          <Row>
-            <ClickableCard
-              onClick={() => {
-                setGameState('view-ball');
-              }}
-            >
-              Play again !
-            </ClickableCard>
-          </Row>
-        ))}
+      {(gameState === 'success' || gameState === 'failure') && (
+        <Row>
+          <ClickableCard
+            onClick={() => {
+              setGameState('view-ball');
+            }}
+          >
+            Play again !
+          </ClickableCard>
+        </Row>
+      )}
     </AppContainer>
   );
 };

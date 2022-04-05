@@ -6,8 +6,12 @@ import Shell from './Shell';
 type GameBoardProps = {
   shellCount: number;
   ballIndex: number;
-  playing: boolean;
+  // true to start the shuffling animations. false to reset to the original state.
+  shuffling: boolean;
+  awaitingInput: boolean;
+  gameOver: boolean;
   onShellClicked: (idx: number) => void;
+  onShufflingDone: () => void;
 };
 
 const timers = {
@@ -15,7 +19,7 @@ const timers = {
   // switchAnimationStepTime time must be a divider of switchAnimationTotalTime !
   switchAnimationStepTime: 20,
   switchAnimationStartDelay: 1100,
-  switchAnimationStepDelay: 700,
+  switchAnimationIntervalDelay: 700,
 };
 
 const pixels = {
@@ -46,13 +50,21 @@ const slowlySwitchPosition = (element: HTMLDivElement, fromX: number, toX: numbe
 };
 
 /**
- * Gameboard
+ * Gameboard controls the movements of the individual shells.
  */
-const GameBoard = ({ shellCount, ballIndex, playing, onShellClicked }: GameBoardProps) => {
+const GameBoard = ({
+  shellCount,
+  ballIndex,
+  shuffling,
+  awaitingInput,
+  gameOver,
+  onShellClicked,
+  onShufflingDone,
+}: GameBoardProps) => {
   const shells = useRef<Array<HTMLDivElement>>([]);
 
   useEffect(() => {
-    if (!playing) {
+    if (!shuffling) {
       return;
     }
     if (!shells.current) {
@@ -60,33 +72,34 @@ const GameBoard = ({ shellCount, ballIndex, playing, onShellClicked }: GameBoard
     }
 
     let source = [...Array(shellCount).keys()];
-
     let shuffleCount = 0;
-    const recursiveShuffleTimeout = () => {
-      setTimeout(() => {
+
+    // delay the first animation to wait for the cup slide down animation
+    setTimeout(() => {
+      // an interval that will trigger `totalShuffleCount` shuffle animations.
+      const interval = setInterval(() => {
         if (shuffleCount === totalShuffleCount) {
+          clearInterval(interval);
+          onShufflingDone();
           return;
         }
+        // randomly chose the destination
         const destination = shuffleArray([...Array(shellCount).keys()]);
         source.forEach((idx) => {
+          // move the element from source to destination
           slowlySwitchPosition(shells.current[idx], source[idx] * pixels.xSpacing, destination[idx] * pixels.xSpacing);
         });
+        // overwrite the destination for next animation
         source = destination;
         shuffleCount++;
-        recursiveShuffleTimeout();
-      }, timers.switchAnimationStepDelay);
-    };
-
-    // delay the first animation
-    setTimeout(() => {
-      recursiveShuffleTimeout();
+      }, timers.switchAnimationIntervalDelay);
     }, timers.switchAnimationStartDelay);
-  }, [playing, shellCount]);
+  }, [shuffling, shellCount]);
 
   return (
     <Container>
       {[...Array(shellCount).keys()].map((k) => (
-        // surround the shell with a div to attach ref + set absolute style
+        // surround the shell with a div to attach ref + set starting absolute style
         <div
           style={{ left: `${pixels.leftMargin + k * pixels.xSpacing}px`, top: 0, position: 'absolute' }}
           key={k}
@@ -98,9 +111,9 @@ const GameBoard = ({ shellCount, ballIndex, playing, onShellClicked }: GameBoard
         >
           <Shell
             containsBall={k === ballIndex}
-            startAnimation={playing}
-            clickable={playing}
-            clicked
+            startAnimation={shuffling}
+            clickable={awaitingInput}
+            clicked={gameOver}
             onClick={() => onShellClicked(k)}
           />
         </div>
