@@ -52,7 +52,7 @@ const slideDownAnimation = css`
 `;
 
 /**
- * This container is the box that contains the trapezoid (and possibly the ball).
+ * This container is the box that contains the UpsideDownCup (and possibly the ball).
  * It's easier to reason about because it's just a rectangle.
  * It also contains the css animation to slide down.
  */
@@ -67,7 +67,7 @@ const CupContainer = styled.div<{ animate?: boolean }>`
 `;
 
 /**
- * An isosceles trapezoid to represent a Shell.
+ * UpsideDownCup is just an isosceles trapezoid to represent a Shell.
  * Idea shamelessly stolen from https://stackoverflow.com/questions/7920754/how-to-draw-a-trapezium-trapezoid-with-css3
  */
 const UpsideDownCup = styled.div<{ clickable: boolean; clicked: boolean }>`
