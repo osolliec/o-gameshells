@@ -38,10 +38,11 @@ Hello and welcome to my [Game of Shells](https://en.wikipedia.org/wiki/Shell_gam
 - Use SVG that I find on the internet / ask a designer to draw the shells, in a company I would definitely ask for a designer's shell :-).
 - Spend some time to use a design system for the rest of the app. Something like [Mantine](https://mantine.dev/), which has caught my eye recently.
 - Make it responsive, probably ! I only tested this on a Desktop computer :-).
+- Play with perspective effects to make it appear as if some Shells pass behind the others when shuffled.
 
 ### Other improvements
 
-- The difficulty could also change the animation time.
+- The difficulty could also pilot the shuffling animation time to make it harder to follow the ball.
 - I would add more tests. Some E2E tests with [Cypress](https://www.cypress.io/) could be added, too.
 - I would host a compiled version of the app, for easy testing online in a github page.
 
@@ -49,4 +50,4 @@ Hello and welcome to my [Game of Shells](https://en.wikipedia.org/wiki/Shell_gam
 
 - I developed the app on Windows (on my personal computer). Apologies in advance if you encounter CRLF issues while checking out the app.
 - I only tested the app on Chrome. I think it should be fine on Edge and Firefox though, I don't know about Safari!
-- I am new at Keyframes and CSS animation in general but I thought it could apply here, so I am happy to have used it.
+- I am new at Keyframes and CSS animation in general but I thought it could apply here, so I am happy to have learned how to use it.
