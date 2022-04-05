@@ -2,6 +2,10 @@
 
 Hello and welcome to my [Game of Shells](https://en.wikipedia.org/wiki/Shell_game) implementation !
 
+# Sneak Peek
+
+![Preview video of shell game](shells.gif)
+
 # Prerequisites
 
 - [Node.js LTS (tested with version > 16)](https://nodejs.org/en/download/)
