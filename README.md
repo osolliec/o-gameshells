@@ -17,6 +17,8 @@ Hello and welcome to my [Game of Shells](https://en.wikipedia.org/wiki/Shell_gam
 - [Vite](https://vitejs.dev/), a new build tool for web projects.
 - [ESlint](https://eslint.org/), to detect and fix linting issues.
 - [Prettier](https://prettier.io/), to automatically format on save my files.
+- [React testing library](https://testing-library.com/docs/react-testing-library/intro/), to execute tests as a user would see and use the application.
+- [Jest](https://jestjs.io/), the testing framework for the tests.
 
 # Get started
 
